@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 3: Functional Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom drag-and-drop box styling */
+        .drop-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9fafb;
+            color: #6b7280;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .drop-zone:hover {
+            background-color: #f3f4f6;
+        }
+
+        .drop-zone.drag-over {
+            background-color: #e5e7eb;
+            border-color: #3b82f6;
+        }
+
+        /* Sidebar styling */
+        .tabs-container {
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            margin-right: 16px;
+        }
+
+        .tabs-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tab-item {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            padding: 8px 16px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            color: #374151; /* Default text color */
+            background-color: #e5e7eb; /* Default background color */
+        }
+
+        .tab-item:hover {
+            background-color: #d1d5db; /* Hover background */
+        }
+
+        .tab-item.active {
+            background-color: #007bff; /* Active section background */
+            color: white; /* Active section text */
+        }
+        .tab-item:not(.active) {
+            pointer-events: none;
+            color: rgb(10, 9, 9);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="flex">
+        <!-- Sidebar with Tabs -->
+        <div class="tabs-container">
+            <h2 class="text-lg font-bold mb-4">RICEFW Sections</h2>
+            <ul class="tabs-list">
+                <li><a href="section1.html" class="tab-item">Section 1 - VOC</a></li>
+                <li><a href="section2.html" class="tab-item">Section 2 - ROC</a></li>
+                <li><a href="section3.html" class="tab-item active">Section 3 - Functional Design</a></li>
+                <li><a href="section4.html" class="tab-item">Section 4 - Technical Design</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-grow max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8">
+            <!-- Back Button at the Top -->
+            <button onclick="goBack()" class="bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded shadow transition">
+                Back
+            </button>
+
+            <!-- Section Title -->
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Section 3: Functional Design</h1>
+
+            <!-- Placeholder Information -->
+            <div class="text-sm text-gray-700 space-y-4">
+                <p>To be completed by the Functional Owner (Consultant)</p>
+                <p>Rework (Y/N): <b>Yes</b></p>
+
+                <p><b>Reference SAP R/3 Transactions/Tables/Programs:</b> (Note all known transactions, tables, and programs that are used, or reports containing similar data, screenshots are recommended)</p>
+                <p>
+                    <strong>[Insert attachment here]</strong>
+                </p>
+
+                <p><b>Process:</b> (Describe the process, what the program should do, if possible in form of a flowchart)</p>
+                <p>
+                    <strong>[Insert attachment here]</strong>
+                </p>
+
+                <p><b>Interface Direction:</b> (To SAP, from SAP or Bi-directional)</p>
+                <p><b>Error Handling:</b> (Owner Definition & Business Needs)</p>
+                <p><b>Frequency:</b> (How often will the report be run?)</p>
+                <p><b>Data Volume:</b></p>
+
+                <p><b>Security Requirements:</b> (Describe any security considerations requiring explicit authorization checks within code or special processing considerations)</p>
+                <ul class="list-disc pl-6">
+                    <li>No Specific Restrictions</li>
+                    <li>Restriction Based on Certain Criteria (e.g., Restricted by Sales area?)</li>
+                    <li>Other</li>
+                </ul>
+
+                <p><b>Comments:</b></p>
+                <p>
+                    <strong>[Insert attachment here]</strong>
+                </p>
+
+                <p><b>Data Sensitivity:</b> (Plant/Level of restrictions, please explain)</p>
+
+                <p><b>Unit Testing:</b> (Information the developer can use to unit test the application. This needs to include test scenarios: positive and negative test scenarios, instructions, test data, and expected results)</p>
+                <table class="border-collapse border border-gray-300 w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border border-gray-300 p-2">Test Condition / Test Scenario</th>
+                            <th class="border border-gray-300 p-2">Steps Involved</th>
+                            <th class="border border-gray-300 p-2">Input Values (Test Data)</th>
+                            <th class="border border-gray-300 p-2">Expected Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-300 p-2">01</td>
+                            <td class="border border-gray-300 p-2"></td>
+                            <td class="border border-gray-300 p-2"></td>
+                            <td class="border border-gray-300 p-2"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300 p-2">02</td>
+                            <td class="border border-gray-300 p-2"></td>
+                            <td class="border border-gray-300 p-2"></td>
+                            <td class="border border-gray-300 p-2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><b>Additional Comments:</b> (Add any additional information necessary to assist in development as needed)</p>
+                <p>
+                    <strong>[Insert attachment here]</strong>
+                </p>
+
+                <p><b>Rework Log:</b> (The version shown above is the latest; this area may contain previous version(s) of the same section)</p>
+                <p>
+                    <strong>[Insert attachment here]</strong>
+                </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-center items-center mt-8 gap-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded shadow transition">
+                    Generate Functional Design
+                </button>
+                <button onclick="navigateTo('section4.html')" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded shadow transition">
+                    Generate Technical Design
+                </button>
+                <button class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded shadow transition">
+                    Download Functional Design
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'section2.html'; // Ensure this matches your main page file name
+        }
+        // Navigation to specific sections
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+    </script>
+</body>
+</html>
