@@ -66,11 +66,19 @@
             <div class="grid grid-cols-12 gap-6">
                 <!-- RICEFW Sections -->
                 <div class="col-span-3 bg-gray-50 p-4 rounded-lg shadow-md">
-                    <h2 class="text-lg font-semibold mb-4 text-gray-700">Menu</h2>
+                    <!-- Button to Toggle Form -->
+                    <button 
+                    id="toggleFormButton3" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+                >
+                    Menu
+                </button>
+                <div 
+                id="collapsibleForm3" 
+                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+            >
                     <div class="flex flex-col space-y-2">
-<!--                         <button onclick="navigateTo('section1.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
-                            Section 1 - VOC
-                        </button> -->
+
                         <button onclick="navigateTo('section2.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
                             Business Requirements
                         </button>
@@ -82,10 +90,22 @@
                         </button>
                     </div>
                 </div>
+                </div>
 
                 <!-- Input Details Section -->
                 <div class="col-span-9 bg-gray-50 p-6 rounded-lg shadow-md">
-                    <h2 class="text-lg font-semibold mb-4 text-gray-700">Enter Details</h2>
+                    <button 
+                    id="toggleFormButton1" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+                  >
+                    Enter Details
+                  </button>
+
+                      <!-- Collapsible Form -->
+                <div 
+                id="collapsibleForm1" 
+                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+            >
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Choose Document -->
                         <div>
@@ -146,8 +166,23 @@
                         </div>
                     </div>
 
+                </div>
+
                     <!-- Owners Table -->
-                    <h3 class="text-lg font-semibold mt-8 mb-4 text-gray-700">Owner Details</h3>
+                        <!-- Button to Toggle Form -->
+                        <button 
+                        id="toggleFormButton2" 
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+                    >
+                        Owner details
+                    </button>
+
+
+                        <!-- Collapsible Form -->
+                <div 
+                id="collapsibleForm2" 
+                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+            >
                     <table class="w-full table-auto border-collapse">
                         <thead>
                             <tr>
@@ -189,6 +224,7 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
 
 
 
@@ -262,6 +298,37 @@
                 alert('Please upload a valid .txt file.');
             }
         });
+
+
+
+
+
+    // Form toggle functionality 1
+    const toggleFormButton1 = document.getElementById('toggleFormButton1');
+    const collapsibleForm1 = document.getElementById('collapsibleForm1');
+
+    toggleFormButton1.addEventListener('click', () => {
+      collapsibleForm1.classList.toggle('hidden');
+    });
+
+
+    // Form toggle functionality 2
+    const toggleFormButton2 = document.getElementById('toggleFormButton2');
+    const collapsibleForm2 = document.getElementById('collapsibleForm2');
+
+    toggleFormButton2.addEventListener('click', () => {
+      collapsibleForm2.classList.toggle('hidden');
+    });
+
+
+
+    // Form toggle functionality 3
+    const toggleFormButton3 = document.getElementById('toggleFormButton3');
+    const collapsibleForm3 = document.getElementById('collapsibleForm3');
+
+    toggleFormButton3.addEventListener('click', () => {
+      collapsibleForm3.classList.toggle('hidden');
+    });
     </script>
 </body>
 </html>
