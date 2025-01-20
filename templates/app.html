@@ -243,12 +243,12 @@
 
             <!-- Buttons -->
             <div class="flex justify-between items-center mt-8">
-                <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded shadow transition">
+<!--                 <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded shadow transition">
                     Generate Document
                 </button>
                 <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition">
                     Preview
-                </button>
+                </button> -->
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition">
                     Proceed Further
                 </button>
@@ -283,6 +283,7 @@
                 const text = await file.text();
                 fileContentInput.value = encodeURIComponent(text);
                 submitButton.disabled = false;
+		alert('File Uploaded Successfully! Click on "Submit"')
             } else {
                 alert('Please upload a valid .txt file.');
             }
@@ -294,6 +295,7 @@
                 const text = await file.text();
                 fileContentInput.value = encodeURIComponent(text);
                 submitButton.disabled = false;
+		alert('File Uploaded Successfully! Click on "Submit"')
             } else {
                 alert('Please upload a valid .txt file.');
             }
