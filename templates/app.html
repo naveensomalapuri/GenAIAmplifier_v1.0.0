@@ -57,7 +57,14 @@
         <input id="file-input" type="file" class="hidden" accept=".txt" />
     </div>
 
-    <button type="submit" id="submit-button" disabled>Submit</button>
+    <button 
+  type="submit" 
+  id="submit-button" 
+  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 active:bg-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
+  disabled
+>
+  Submit
+</button>
 
     <form action="section1.html" method="get">
         <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8">
@@ -67,12 +74,15 @@
                 <!-- RICEFW Sections -->
                 <div class="col-span-3 bg-gray-50 p-4 rounded-lg shadow-md">
                     <!-- Button to Toggle Form -->
-                    <button 
+                    <button  
                     id="toggleFormButton3" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-                >
-                    Menu
-                </button>
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2"
+                  >
+                    <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
+                    <span>Menu</span>
+                  </button>
                 <div 
                 id="collapsibleForm3" 
                 class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
@@ -94,17 +104,20 @@
 
                 <!-- Input Details Section -->
                 <div class="col-span-9 bg-gray-50 p-6 rounded-lg shadow-md">
-                    <button 
+                    <button  
                     id="toggleFormButton1" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
                   >
-                    Enter Details
+                    <span>Enter Details</span>
+                    <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                    </svg>
                   </button>
 
                       <!-- Collapsible Form -->
                 <div 
                 id="collapsibleForm1" 
-                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
             >
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Choose Document -->
@@ -170,18 +183,21 @@
 
                     <!-- Owners Table -->
                         <!-- Button to Toggle Form -->
-                        <button 
+                        <button  
                         id="toggleFormButton2" 
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-                    >
-                        Owner details
-                    </button>
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
+                      >
+                        <span>Owner Details</span>
+                        <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                        </svg>
+                      </button>
 
 
                         <!-- Collapsible Form -->
                 <div 
                 id="collapsibleForm2" 
-                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
             >
                     <table class="w-full table-auto border-collapse">
                         <thead>
@@ -249,9 +265,15 @@
                 <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition">
                     Preview
                 </button> -->
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition">
-                    Proceed Further
-                </button>
+                <button 
+                type="submit" 
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition flex items-center justify-center space-x-2"
+              >
+                <span>Proceed Further</span>
+                <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+              </button>
             </div>
 
         </div>
