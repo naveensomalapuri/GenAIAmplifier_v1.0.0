@@ -1,358 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>AI Functional Accelerator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .drop-zone {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s, border-color 0.3s;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-            color: #555;
-            font-size: 16px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>AI Functional Accelerator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .drop-zone {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s, border-color 0.3s;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+      color: #555;
+      font-size: 16px;
+      position: relative;
+    }
 
-        .drop-zone.dragging {
-            background-color: #e0f7fa;
-            border-color: #00796b;
-            color: #00796b;
-        }
+    .drop-zone.dragging {
+      background-color: #e0f7fa;
+      border-color: #00796b;
+      color: #00796b;
+    }
 
-        #submit-button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            background-color: #4caf50;
-            border: none;
-            border-radius: 5px;
-            cursor: not-allowed;
-            transition: background-color 0.3s, cursor 0.3s;
-        }
+    /* Style the textarea to blend within the drop zone */
+    .drop-zone textarea {
+      width: 100%;
+      height: 150px;
+      border: none;
+      background: transparent;
+      resize: vertical;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      outline: none;
+      margin-top: 10px;
+    }
 
-        #submit-button:enabled {
-            cursor: pointer;
-            background-color: #2e7d32;
-        }
+    /* Notification message styling */
+    .notification-message {
+      margin-top: 10px;
+      font-size: 16px;
+      text-align: center;
+    }
 
-        #submit-button:hover:enabled {
-            background-color: #1b5e20;
-        }
-    </style>
+    #submit-button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 5px;
+      cursor: not-allowed;
+      transition: background-color 0.3s, cursor 0.3s;
+    }
+
+    #submit-button:enabled {
+      cursor: pointer;
+      background-color: #2e7d32;
+    }
+
+    #submit-button:hover:enabled {
+      background-color: #1b5e20;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 p-6">
+  <!-- Drag and Drop Zone with Textbox functionality -->
+  <div id="drop-zone" class="drop-zone">
+    <p>
+      Drag & drop your meeting notes (.txt) file here, or click to upload.<br>
+      Alternatively, type your meeting notes below:
+    </p>
+    <!-- The editable textarea for manual entry -->
+    <textarea id="text-input" placeholder="Type your meeting notes here..."></textarea>
+    <!-- Hidden file input remains for drag and drop / file selection -->
+    <input id="file-input" type="file" class="hidden" accept=".txt" />
+    <!-- Notification message element -->
+    <div id="notification" class="notification-message"></div>
+  </div>
 
-    <!-- Drag and Drop Zone -->
-    <div id="drop-zone" class="drop-zone">
-        <p>Drag & drop your meeting notes (.txt) file here, or click to upload.</p>
-        <input id="file-input" type="file" class="hidden" accept=".txt" />
-    </div>
+  <button 
+    type="submit" 
+    id="submit-button" 
+    class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 active:bg-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
+    disabled
+  >
+    Submit
+  </button>
 
-    <button 
-  type="submit" 
-  id="submit-button" 
-  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 active:bg-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
+  <!-- <button 
+  type="" 
+  id="" 
+  class="mb-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 active:from-green-500 active:to-yellow-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
   disabled
 >
-  Submit
+  New WRICEF
 </button>
 
-    <form action="section1.html" method="get">
-        <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8">
-	                <!-- Title -->
-            <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Gen AI Amplifier</h1>
-            <div class="grid grid-cols-12 gap-6">
-                <!-- RICEFW Sections -->
-                <div class="col-span-3 bg-gray-50 p-4 rounded-lg shadow-md">
-                    <!-- Button to Toggle Form -->
-                    <button  
-                    id="toggleFormButton3" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2"
-                  >
-                    <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-                    </svg>
-                    <span>Menu</span>
-                  </button>
-                <div 
-                id="collapsibleForm3" 
-                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
-            >
-                    <div class="flex flex-col space-y-2">
-
-                        <button onclick="navigateTo('section2.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
-                            Business Requirements
-                        </button>
-                        <button onclick="navigateTo('section3.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
-                            Functional Design
-                        </button>
-                        <button onclick="navigateTo('section4.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
-                            Technical Design
-                        </button>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Input Details Section -->
-                <div class="col-span-9 bg-gray-50 p-6 rounded-lg shadow-md">
-                    <button  
-                    id="toggleFormButton1" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
-                  >
-                    <span>Enter Details</span>
-                    <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
-                    </svg>
-                  </button>
-
-                      <!-- Collapsible Form -->
-                <div 
-                id="collapsibleForm1" 
-                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
-            >
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Choose Document -->
-                        <div>
-                            <label for="ricefw" class="block font-medium text-gray-600 mb-1">RICEFW Type:</label>
-                            <select id="ricefw" name="ricefw" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                                <option value="Reports">Reports</option>
-                                <option value="Interface">Interface</option>
-                                <option value="Conversions">Conversions</option>
-                                <option value="Enhancements">Enhancements</option>
-                                <option value="Forms">Forms</option>
-                                <option value="Workflow">Workflow</option>
-                            </select>
-                        </div>
-                        <!-- Customer -->
-                        <div>
-                            <label for="customer" class="block font-medium text-gray-600 mb-1">Customer:</label>
-                            <input type="text" id="customer" name="customer" placeholder="Enter Customer Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- RICEFW Number -->
-                        <div>
-                            <label for="ricefw-number" class="block font-medium text-gray-600 mb-1">RICEFW /Issue Number:</label>
-                            <input type="text" id="ricefw-number" name="ricefw-number" placeholder="Enter RICEFW Number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Module(s) -->
-                        <div>
-                            <label for="module" class="block font-medium text-gray-600 mb-1">Module(s):</label>
-                            <input type="text" id="module" name="module" placeholder="Enter Module(s)" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Specification Name -->
-                        <div>
-                            <label for="specification" class="block font-medium text-gray-600 mb-1">Specification Name:</label>
-                            <input type="text" id="specification" name="specification" placeholder="Enter Specification Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Brief Description -->
-                        <div>
-                            <label for="description" class="block font-medium text-gray-600 mb-1">Brief Description:</label>
-                            <input type="text" id="description" name="description" placeholder="Enter Brief Description" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Related RICEFW(s) -->
-                        <div>
-                            <label for="related-ricefw" class="block font-medium text-gray-600 mb-1">Related RICEFW(s):</label>
-                            <input type="text" id="related-ricefw" name="related-ricefw" placeholder="Enter Related RICEFW(s)" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Created By -->
-                        <div>
-                            <label for="created-by" class="block font-medium text-gray-600 mb-1">Created By:</label>
-                            <input type="text" id="created-by" name="created-by" placeholder="Enter Your Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Document Date -->
-                        <div>
-                            <label for="document-date" class="block font-medium text-gray-600 mb-1">Document Date:</label>
-                            <input type="date" id="document-date" name="document-date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                        <!-- Target Completion Date -->
-                        <div>
-                            <label for="completion-date" class="block font-medium text-gray-600 mb-1">Target Completion Date:</label>
-                            <input type="date" id="completion-date" name="completion-date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
-                        </div>
-                    </div>
-
-                </div>
-
-                    <!-- Owners Table -->
-                        <!-- Button to Toggle Form -->
-                        <button  
-                        id="toggleFormButton2" 
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
-                      >
-                        <span>Owner Details</span>
-                        <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
-                        </svg>
-                      </button>
-
-
-                        <!-- Collapsible Form -->
-                <div 
-                id="collapsibleForm2" 
-                class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
-            >
-                    <table class="w-full table-auto border-collapse">
-                        <thead>
-                            <tr>
-                                <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Role</th>
-                                <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Name</th>
-                                <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Company / Role</th>
-                                <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Email</th>
-                                <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Phone #</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2">Client Owner (BPO)</td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="client-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="client-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="email" name="client-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="client-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2">Functional Owner (Consultant)</td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="functional-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="functional-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="email" name="functional-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="functional-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2">Technical Owner (Consultant)</td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="technical-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="technical-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="email" name="technical-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="technical-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2">Developer</td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="developer-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="developer-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="email" name="developer-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                                <td class="border border-gray-300 px-4 py-2"><input type="text" name="developer-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+<button 
+  type="" 
+  id="" 
+  class="mb-4 bg-gradient-to-r from-pink-500 to-orange-500 text-white px-4 py-2 rounded-md shadow-lg hover:from-orange-500 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-orange-300 active:from-green-500 active:to-yellow-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
+  disabled
+>
+  Load existing WRICEF
+</button> -->
 
 
 
-                </div>
+<button 
+  type="" 
+  id="" 
+  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-blue-500 disabled:cursor-not-allowed" 
+  disabled
+>
+  New WRICEF
+</button>
+
+<button 
+  type="" 
+  id="" 
+  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-blue-500 disabled:cursor-not-allowed" 
+  disabled
+>
+  Load existing WRICEF
+</button>
 
 
 
-                
-            </div>
-
-            
-
-
-
-            <input type="hidden" name="fileText" id="file-text">
-
-            <!-- Buttons -->
-            <div class="flex justify-between items-center mt-8">
-<!--                 <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded shadow transition">
-                    Generate Document
-                </button>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition">
-                    Preview
-                </button> -->
-                <button 
-                type="submit" 
-                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition flex items-center justify-center space-x-2"
-              >
-                <span>Proceed Further</span>
-                <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                </svg>
+  <form action="/add" method="post">
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8">
+      <!-- Title -->
+      <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Gen AI Amplifier</h1>
+      <div class="grid grid-cols-12 gap-6">
+        <!-- RICEFW Sections -->
+        <div class="col-span-3 bg-gray-50 p-4 rounded-lg shadow-md">
+          <!-- Button to Toggle Form -->
+          <button  
+            id="toggleFormButton3" 
+            class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2"
+          >
+            <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+            <span>Menu</span>
+          </button>
+          <div 
+            id="collapsibleForm3" 
+            class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden"
+          >
+            <div class="flex flex-col space-y-2">
+              <button onclick="navigateTo('section2.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
+                Business Requirements
+              </button>
+              <button onclick="navigateTo('section3.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
+                Functional Design
+              </button>
+              <button onclick="navigateTo('section4.html')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow transition">
+                Technical Design
               </button>
             </div>
-
+          </div>
         </div>
-    </form>
 
-    <script>
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const fileContentInput = document.getElementById('file-text');
-        const submitButton = document.getElementById('submit-button');
+        <!-- Input Details Section -->
+        <div class="col-span-9 bg-gray-50 p-6 rounded-lg shadow-md">
+          <button  
+            id="toggleFormButton1" 
+            class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
+          >
+            <span>Enter Details</span>
+            <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+            </svg>
+          </button>
 
-        dropZone.addEventListener('click', () => fileInput.click());
+          <!-- Collapsible Form -->
+          <div 
+            id="collapsibleForm1" 
+            class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
+          >
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Choose Document -->
+              <div>
+                <label for="ricefw" class="block font-medium text-gray-600 mb-1">WRICEF Type:</label>
+                <select id="ricefw" name="ricefw" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+                  <option value="General">General</option>
+                  <option value="Reports">Reports</option>
+                  <option value="Interface">Interface</option>
+                  <option value="Conversions">Conversions</option>
+                  <option value="Enhancements">Enhancements</option>
+                  <option value="Forms">Forms</option>
+                  <option value="Workflow">Workflow</option>
+                </select>
+              </div>
+              <!-- Customer -->
+              <div>
+                <label for="customer" class="block font-medium text-gray-600 mb-1">Customer:</label>
+                <input type="text" id="customer" name="customer" placeholder="Enter Customer Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- RICEFW Number -->
+              <div>
+                <label for="ricefw-number" class="block font-medium text-gray-600 mb-1">WRICEF /Issue Number:</label>
+                <input type="text" id="ricefw-number" name="ricefw-number" placeholder="Enter RICEFW Number" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Module(s) -->
+              <div>
+                <label for="module" class="block font-medium text-gray-600 mb-1">Module(s):</label>
+                <input type="text" id="module" name="module" placeholder="Enter Module(s)" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Specification Name -->
+              <div>
+                <label for="specification" class="block font-medium text-gray-600 mb-1">Specification Name:</label>
+                <input type="text" id="specification" name="specification" placeholder="Enter Specification Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Brief Description -->
+              <div>
+                <label for="description" class="block font-medium text-gray-600 mb-1">Brief Description:</label>
+                <input type="text" id="description" name="description" placeholder="Enter Brief Description" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Related RICEFW(s) -->
+              <div>
+                <label for="related-ricefw" class="block font-medium text-gray-600 mb-1">Related WRICEF(s):</label>
+                <input type="text" id="related-ricefw" name="related-ricefw" placeholder="Enter Related RICEFW(s)" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Created By -->
+              <div>
+                <label for="created-by" class="block font-medium text-gray-600 mb-1">Created By:</label>
+                <input type="text" id="created-by" name="created-by" placeholder="Enter Your Name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Document Date -->
+              <div>
+                <label for="document-date" class="block font-medium text-gray-600 mb-1">Document Date:</label>
+                <input type="date" id="document-date" name="document-date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+              <!-- Target Completion Date -->
+              <div>
+                <label for="completion-date" class="block font-medium text-gray-600 mb-1">Target Completion Date:</label>
+                <input type="date" id="completion-date" name="completion-date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" required>
+              </div>
+            </div>
+          </div>
 
-        dropZone.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropZone.classList.add('dragging');
-        });
+          <!-- Owners Table -->
+          <!-- Button to Toggle Form -->
+          <button  
+            id="toggleFormButton2" 
+            class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
+          >
+            <span>Owner Details</span>
+            <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+            </svg>
+          </button>
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragging');
-        });
+          <!-- Collapsible Form -->
+          <div 
+            id="collapsibleForm2" 
+            class="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-200 hidden mb-4"
+          >
+            <table class="w-full table-auto border-collapse">
+              <thead>
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Role</th>
+                  <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Name</th>
+                  <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Company / Role</th>
+                  <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Email</th>
+                  <th class="border border-gray-300 px-4 py-2 bg-gray-100 text-left">Phone #</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">Client Owner (BPO)</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="client-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="client-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="email" name="client-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="client-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">Functional Owner (Consultant)</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="functional-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="functional-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="email" name="functional-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="functional-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">Technical Owner (Consultant)</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="technical-owner-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="technical-owner-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="email" name="technical-owner-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="technical-owner-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">Developer</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="developer-name" placeholder="Enter Name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="developer-company" placeholder="Enter Company / Role" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="email" name="developer-email" placeholder="Enter Email" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" name="developer-phone" placeholder="Enter Phone #" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-        dropZone.addEventListener('drop', async (event) => {
-            event.preventDefault();
-            dropZone.classList.remove('dragging');
+      <input type="hidden" name="fileText" id="file-text">
 
-            const file = event.dataTransfer.files[0];
-            if (file && file.type === 'text/plain') {
-                const text = await file.text();
-                fileContentInput.value = encodeURIComponent(text);
-                submitButton.disabled = false;
-		alert('File Uploaded Successfully! Click on "Submit"')
-            } else {
-                alert('Please upload a valid .txt file.');
-            }
-        });
+      <!-- Buttons -->
+      <div class="flex justify-between items-center mt-8">
 
-        fileInput.addEventListener('change', async () => {
-            const file = fileInput.files[0];
-            if (file && file.type === 'text/plain') {
-                const text = await file.text();
-                fileContentInput.value = encodeURIComponent(text);
-                submitButton.disabled = false;
-		alert('File Uploaded Successfully! Click on "Submit"')
-            } else {
-                alert('Please upload a valid .txt file.');
-            }
-        });
+
+        <button 
+          type="" 
+          id="" 
+          class="mb-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-green-500 disabled:cursor-not-allowed" 
+          disabled
+        >
+          Save
+        </button>
 
 
 
+        <button 
+          onclick="redirectToSuccess()" 
+          class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition flex items-center justify-center space-x-2"
+        >
+          <span>Continue</span>
+          <svg class="w-5 h-5 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </form>
 
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileContentInput = document.getElementById('file-text');
+    const submitButton = document.getElementById('submit-button');
+    const textInput = document.getElementById('text-input');
+    const notification = document.getElementById('notification');
+
+    // Function to show notifications instead of pop-ups
+    function showNotification(message, type) {
+      notification.textContent = message;
+      if (type === 'success') {
+        notification.style.color = '#2e7d32'; // green
+      } else if (type === 'error') {
+        notification.style.color = '#d32f2f'; // red
+      } else {
+        notification.style.color = '#555';
+      }
+    }
+
+    // When the drop zone is clicked, trigger file selection
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropZone.classList.add('dragging');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragging');
+    });
+
+    // Handle file drop
+    dropZone.addEventListener('drop', async (event) => {
+      event.preventDefault();
+      dropZone.classList.remove('dragging');
+
+      const file = event.dataTransfer.files[0];
+      if (file && file.type === 'text/plain') {
+        const text = await file.text();
+        // Update both the textarea and the hidden input
+        textInput.value = text;
+        fileContentInput.value = encodeURIComponent(text);
+        submitButton.disabled = false;
+        showNotification('File Uploaded Successfully! Click on "Submit"', "success");
+      } else {
+        showNotification('Please upload a valid .txt file.', "error");
+      }
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      if (file && file.type === 'text/plain') {
+        const text = await file.text();
+        textInput.value = text;
+        fileContentInput.value = encodeURIComponent(text);
+        submitButton.disabled = false;
+        showNotification('File Uploaded Successfully! Click on "Submit"', "success");
+      } else {
+        showNotification('Please upload a valid .txt file.', "error");
+      }
+    });
+
+    // Listen for manual text input
+    textInput.addEventListener('input', () => {
+      const text = textInput.value;
+      fileContentInput.value = encodeURIComponent(text);
+      submitButton.disabled = text.trim() === "";
+    });
 
     // Form toggle functionality 1
     const toggleFormButton1 = document.getElementById('toggleFormButton1');
     const collapsibleForm1 = document.getElementById('collapsibleForm1');
-
     toggleFormButton1.addEventListener('click', () => {
       collapsibleForm1.classList.toggle('hidden');
     });
 
-
     // Form toggle functionality 2
     const toggleFormButton2 = document.getElementById('toggleFormButton2');
     const collapsibleForm2 = document.getElementById('collapsibleForm2');
-
     toggleFormButton2.addEventListener('click', () => {
       collapsibleForm2.classList.toggle('hidden');
     });
 
-
-
     // Form toggle functionality 3
     const toggleFormButton3 = document.getElementById('toggleFormButton3');
     const collapsibleForm3 = document.getElementById('collapsibleForm3');
-
     toggleFormButton3.addEventListener('click', () => {
       collapsibleForm3.classList.toggle('hidden');
     });
-    </script>
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      // Convert FormData to a plain object
+      const data = Object.fromEntries(formData.entries());
+
+      // Transform keys: replace dashes with underscores
+      const transformedData = {};
+      for (const [key, value] of Object.entries(data)) {
+        transformedData[key.replace(/-/g, "_")] = value;
+      }
+
+      const response = await fetch('/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(transformedData)
+      });
+
+      const result = await response.json();
+      console.log(result);
+    });
+
+    // Redirect to the next page
+    function redirectToSuccess() {
+      let name = document.getElementById("customer").value;
+      let meetingNotes = document.getElementById("file-text").value;
+      let ricefwNumber = document.getElementById("ricefw-number").value;
+      window.location.href = `/success?name=${encodeURIComponent(name)}&meetingNotes=${encodeURIComponent(meetingNotes)}&ricefwNumber=${encodeURIComponent(ricefwNumber)}`;
+    }
+  </script>
 </body>
 </html>

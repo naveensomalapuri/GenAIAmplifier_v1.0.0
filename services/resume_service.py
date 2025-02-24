@@ -1,5 +1,5 @@
 
-from services.model import openmodle
+from services.model import openmodel
 
 import os
 import json
@@ -19,7 +19,7 @@ def generate_resume(client_problem: str, client_name) -> dict:
     #prompt = prompt_template.format(client_problem=client_problem)
     
     # Pass the rendered prompt string to openmodle
-    response = openmodle(prompt=client_problem, client_name=client_name)
+    response = openmodel(client_problem, client_name)
 
     # Debugging: Print the response
     
@@ -42,132 +42,7 @@ def generate_resume(client_problem: str, client_name) -> dict:
     #return result
     
     return response
-"""
-# updated save_resume function
-def save_resume(resume_data: dict) -> str:
-    try:
-        # Check if 'file_name' is not already present in the resume data
-        if 'file_name' not in resume_data:
-            # Generate a unique ID for the resume
-            resume_id = str(uuid.uuid4())
-            file_name = f'{resume_id}.json'
-            file_path = os.path.join(RESUME_DIR, file_name)
 
-            # Add the file name into the resume data
-            resume_data['file_name'] = file_name
-            
-            # Save the resume data as a new JSON file
-            with open(file_path, 'w') as file:
-                json.dump([resume_data], file, indent=4)
-            
-            return resume_id
-        else:
-            # If the resume already has a 'file_name', append to the existing file
-            file_path = os.path.join(RESUME_DIR, resume_data['file_name'])
-            
-            # Check if the file exists
-            if os.path.exists(file_path):
-                # Load the existing data (which is a list)
-                with open(file_path, 'r') as file:
-                    existing_data = json.load(file)
-                
-                # Append the new data to the existing list
-                existing_data.append(resume_data)
-                
-                # Write the updated list back to the file
-                with open(file_path, 'w') as file:
-                    json.dump(existing_data, file, indent=4)
-
-            return resume_data['file_name']
-    
-    except Exception as e:
-        print(f"Error saving resume to file: {e}")
-        return None
-""""""
-def save_resume(resume_data: dict) -> str:
-    try:
-        # Extract the client name and generate a sanitized file name
-        client_name = resume_data.get('client_name', 'unknown_client').replace(" ", "_")
-        
-        # Generate a unique ID for the resume
-        resume_id = str(uuid.uuid4())
-        file_name = f'{client_name}.json'
-        file_path = os.path.join(RESUME_DIR, file_name)
-
-        # Check if 'file_name' is not already present in the resume data
-        if 'file_name' not in resume_data:
-            # Add the file name into the resume data
-            resume_data['file_name'] = file_name
-            
-            # Save the resume data as a new JSON file
-            with open(file_path, 'w') as file:
-                json.dump([resume_data], file, indent=4)
-            
-            return resume_id
-        else:
-            # If the resume already has a 'file_name', append to the existing file
-            file_path = os.path.join(RESUME_DIR, resume_data['file_name'])
-            
-            # Check if the file exists
-            if os.path.exists(file_path):
-                # Load the existing data (which is a list)
-                with open(file_path, 'r') as file:
-                    existing_data = json.load(file)
-                
-                # Append the new data to the existing list
-                existing_data.append(resume_data)
-                
-                # Write the updated list back to the file
-                with open(file_path, 'w') as file:
-                    json.dump(existing_data, file, indent=4)
-
-            return resume_data['file_name']
-    
-    except Exception as e:
-        print(f"Error saving resume to file: {e}")
-        return None
-
-"""
-"""
-def save_resume(resume_data: dict) -> str:
-    try:
-        # Extract the client name and generate a sanitized file name
-        client_name = resume_data.get('client_name', 'unknown_client').replace(" ", "_")
-        file_name = f'{client_name}.json'
-        file_path = os.path.join(RESUME_DIR, file_name)
-
-        # Check if the file already exists
-        if os.path.exists(file_path):
-            # If the file exists, load existing data and append the new object
-            with open(file_path, 'r') as file:
-                existing_data = json.load(file)
-
-            # Ensure existing data is a list before appending
-            if not isinstance(existing_data, list):
-                raise ValueError(f"File {file_name} does not contain a list of JSON objects.")
-
-            # Append the new resume data to the list
-            existing_data.append(resume_data)
-
-            # Write the updated list back to the file
-            with open(file_path, 'w') as file:
-                json.dump(existing_data, file, indent=4)
-
-        else:
-            # If the file does not exist, create a new file with the data as a list
-            with open(file_path, 'w') as file:
-                json.dump([resume_data], file, indent=4)
-
-        # Add the file name to the resume data for reference
-        resume_data['file_name'] = file_name
-
-        # Return the file name instead of UUID
-        return file_name
-
-    except Exception as e:
-        print(f"Error saving resume to file: {e}")
-        return None
-"""
 
 
 import os
