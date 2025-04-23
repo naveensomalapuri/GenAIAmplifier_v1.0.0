@@ -20,13 +20,11 @@
       font-size: 16px;
       position: relative;
     }
-
     .drop-zone.dragging {
       background-color: #e0f7fa;
       border-color: #00796b;
       color: #00796b;
     }
-
     /* Style the textarea to blend within the drop zone */
     .drop-zone textarea {
       width: 100%;
@@ -40,14 +38,12 @@
       outline: none;
       margin-top: 10px;
     }
-
     /* Notification message styling */
     .notification-message {
       margin-top: 10px;
       font-size: 16px;
       text-align: center;
     }
-
     #submit-button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -60,12 +56,10 @@
       cursor: not-allowed;
       transition: background-color 0.3s, cursor 0.3s;
     }
-
     #submit-button:enabled {
       cursor: pointer;
       background-color: #2e7d32;
     }
-
     #submit-button:hover:enabled {
       background-color: #1b5e20;
     }
@@ -96,44 +90,21 @@
   </button>
 
   <!-- <button 
-  type="" 
-  id="" 
-  class="mb-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:from-blue-500 hover:to-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 active:from-green-500 active:to-yellow-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
-  disabled
->
-  New WRICEF
-</button>
+    type="button" 
+    id="new-wricef-button" 
+    class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-blue-500 disabled:cursor-not-allowed" 
+    disabled
+  >
+    New WRICEF
+  </button> -->
 
-<button 
-  type="" 
-  id="" 
-  class="mb-4 bg-gradient-to-r from-pink-500 to-orange-500 text-white px-4 py-2 rounded-md shadow-lg hover:from-orange-500 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-orange-300 active:from-green-500 active:to-yellow-500 disabled:bg-gray-400 disabled:cursor-not-allowed" 
-  disabled
->
-  Load existing WRICEF
-</button> -->
-
-
-
-<button 
-  type="" 
-  id="" 
-  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-blue-500 disabled:cursor-not-allowed" 
-  disabled
->
-  New WRICEF
-</button>
-
-<button 
-  type="" 
-  id="" 
-  class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-blue-500 disabled:cursor-not-allowed" 
-  disabled
->
-  Load existing WRICEF
-</button>
-
-
+  <button 
+    type="button" 
+    id="load-existing-button" 
+    class="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700"
+  >
+    Load existing WRICEF
+  </button>
 
   <form action="/add" method="post">
     <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8">
@@ -176,7 +147,7 @@
             id="toggleFormButton1" 
             class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 flex items-center space-x-2 mb-4"
           >
-            <span>Enter Details</span>
+            <span>WRICEF Details</span>
             <svg class="w-6 h-6 text-white dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
             </svg>
@@ -347,19 +318,14 @@
 
       <!-- Buttons -->
       <div class="flex justify-between items-center mt-8">
-
-
         <button 
-          type="" 
-          id="" 
+          type="button" 
+          id="save-button"
           class="mb-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:bg-blue-700 disabled:bg-green-500 disabled:cursor-not-allowed" 
           disabled
         >
           Save
         </button>
-
-
-
         <button 
           onclick="redirectToSuccess()" 
           class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded shadow transition flex items-center justify-center space-x-2"
@@ -409,7 +375,6 @@
     dropZone.addEventListener('drop', async (event) => {
       event.preventDefault();
       dropZone.classList.remove('dragging');
-
       const file = event.dataTransfer.files[0];
       if (file && file.type === 'text/plain') {
         const text = await file.text();
@@ -465,20 +430,22 @@
       collapsibleForm3.classList.toggle('hidden');
     });
 
+    // Add event listener for "Load existing WRICEF" button
+    document.getElementById('load-existing-button').addEventListener('click', () => {
+      window.location.href = 'http://127.0.0.1:8000/listofwricefs';
+    });
+
     const form = document.querySelector('form');
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-
       const formData = new FormData(form);
       // Convert FormData to a plain object
       const data = Object.fromEntries(formData.entries());
-
       // Transform keys: replace dashes with underscores
       const transformedData = {};
       for (const [key, value] of Object.entries(data)) {
         transformedData[key.replace(/-/g, "_")] = value;
       }
-
       const response = await fetch('/add', {
         method: 'POST',
         headers: {
@@ -486,7 +453,6 @@
         },
         body: JSON.stringify(transformedData)
       });
-
       const result = await response.json();
       console.log(result);
     });

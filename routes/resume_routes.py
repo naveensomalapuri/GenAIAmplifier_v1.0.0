@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, FileResponse
 from services.resume_service import generate_resume, save_resume, get_all_resumes, view_resume
 from models.resume_model import Resume, Formdata
+import urllib.parse
+
 
 import os
 from fastapi.responses import HTMLResponse
@@ -274,6 +276,9 @@ async def add_item(
 async def add_item(form_data: Formdata):
     # Convert Pydantic model to dictionary
     new_item = form_data.dict()
+    fileText = new_item['fileText']
+    fileText = urllib.parse.unquote(fileText)
+    new_item['fileText'] = fileText
 
     # Insert into your MongoDB collection
     result = collection.insert_one(new_item)
@@ -289,17 +294,24 @@ async def add_item(form_data: Formdata):
 
 
 @router.get("/success")
-async def success_page(request: Request, name: str, meetingNotes: str):
-    resume = collection.find_one({"customer":name})
-    print("\n")
-    print("*"*100)
-    print(resume)
+async def success_page(request: Request, name: str, meetingNotes: str, ricefwNumber: str):
+    resume = collection.find_one({"ricefw_number":ricefwNumber})
 
-    print("\n")
-    print("*"*100)
-    print(name)
-    return templates.TemplateResponse("section1.html", {"request": request, "name": name, "meetingNotes": meetingNotes, "resume":resume})
+    return templates.TemplateResponse("section1.html", {"request": request, "name": name, "meetingNotes": meetingNotes, "ricefwNumber": ricefwNumber, "resume":resume})
 
+
+
+@router.get("/view/{ricefw_number}", response_class=HTMLResponse)
+async def view_item(request: Request, ricefw_number: str, name: str, meetingNotes: str):
+    resume = collection.find_one({"ricefw_number": ricefw_number})
+
+    return templates.TemplateResponse("section1.html", {
+        "request": request,
+        "name": name,
+        "meetingNotes": meetingNotes,
+        "ricefw_number": ricefw_number,
+        "resume": resume
+    })
 
 
 @router.post("/generate_response")
@@ -699,3 +711,15 @@ async def regeneration(
         raise HTTPException(status_code=500, detail="Failed to update document.")
 
     return {"success": True, "new_response": new_enhanced_response}
+
+
+
+
+
+
+
+
+@router.get("/listofwricefs")
+async def get_ricefs_list(request: Request):
+    ricefs_list = list(collection.find({}, {"_id": 0, "ricefw_number": 1, "customer": 1, "fileText":1}))  # Fetch ricefs_number & customer_name
+    return templates.TemplateResponse("listofwricefs.html", {"request": request, "ricefs_list": ricefs_list})

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricefs List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Ricefs List</h1>
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 p-2">Ricefs Number</th>
+                    <th class="border border-gray-300 p-2">Customer Name</th>
+                    <th class="border border-gray-300 p-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ricefs_list %}
+                <tr class="text-center">
+                    <td class="border border-gray-300 p-2">{{ item.ricefw_number }}</td>
+                    <td class="border border-gray-300 p-2">{{ item.customer }}</td>
+                    <td class="border border-gray-300 p-2">
+                        <!-- <a href="/view/{{ item.ricefw_number }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">View</a> -->
+                        <a href="/view/{{ item.ricefw_number }}?name={{ item.customer | urlencode }}&meetingNotes={{ item.fileText | urlencode }}&ricefwNumber={{ item.ricefw_number }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">View</a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
