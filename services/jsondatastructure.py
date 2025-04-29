@@ -1,33 +1,33 @@
 from pydantic import BaseModel, Field
 
 class VOC(BaseModel):
-    project_name: str = Field(description="Extracted project name")
-    RICEF_id: str = Field(description="Generated or extracted RICEF ID")
-    client_name: str = Field(description="Extracted client name")
-    
-    # Voice of Customer Section
     Voice_Of_Customer_WHAT_Functional_Description: str = Field(
-        description="Voice of Customer - WHAT: Generate a client-centered question about the essential functions and capabilities required of the AI solution. For example, 'What are the essential functions and capabilities this AI solution should have to effectively address our business problem?'"
+        description="WHAT: Provide a descriptive explanation of the essential functionality and capabilities that the enhancement or solution must deliver, based on the input requirement."
     )
+    
     Voice_Of_Customer_WHY_Business_Benefit_Need: str = Field(
-        description="Voice of Customer - WHY: Generate a question asking why this AI solution is necessary and what specific business benefits it provides. For example, 'What business benefits will this solution provide, and what risks or inefficiencies might arise if this solution is not in place?'"
+        description="WHY: Provide a detailed explanation of the business need for the enhancement, including the problems it solves and the benefits it offers, based on the input requirement."
     )
+    
     Voice_Of_Customer_WHO_WHERE: str = Field(
-        description="Voice of Customer - WHO/WHERE: Generate a question identifying the primary users of the AI solution, including departments, teams, or roles. For example, 'Who will be the primary users of this solution, and which departments or organizational units will benefit the most?'"
+        description="WHO/WHERE: Provide a descriptive response identifying the primary users, departments, or roles that will interact with or benefit from the enhancement, and explain where it will be applied, based on the input requirement."
     )
+    
     Voice_Of_Customer_WHEN: str = Field(
-        description="Voice of Customer - WHEN: Generate a question to define how frequently and at what times the solution will be used. For example, 'How often will this solution need to be used, and are there specific times or intervals at which it must operate?'"
+        description="WHEN: Provide a detailed description of how often, under what circumstances, or during which stages of the process the enhancement will be used, based on the input requirement."
     )
+    
     Voice_Of_Customer_HOW_Input: str = Field(
-        description="Voice of Customer - HOW (Input): Generate a question specifying the necessary input data for the AI solution to work effectively. For example, 'What specific data inputs are necessary for this solution, and which fields or data sources are critical for achieving accurate results?'"
+        description="HOW (Input): Provide a descriptive breakdown of the input data or information that the enhancement will handle, including any specific changes or data types, based on the input requirement."
     )
+    
     Voice_Of_Customer_HOW_Process: str = Field(
-        description="Voice of Customer - HOW (Process): Generate a question to clarify how the AI solution should process the input data. For example, 'What specific processes, analyses, or computations should the AI solution perform on the input data to produce meaningful results?'"
+        description="HOW (Process): Describe in detail the internal processes, actions, or logic that the enhancement should perform on the inputs to achieve the expected results, based on the input requirement."
     )
+    
     Voice_Of_Customer_HOW_Output: str = Field(
-        description="Voice of Customer - HOW (Output): Generate a question about the expected format and presentation of the AI solution’s output. For example, 'What should the final output look like, and how should it be formatted or presented to best support our decision-making needs?'"
+        description="HOW (Output): Provide a descriptive explanation of the final outcome or results expected from the enhancement after processing the inputs, including how the output should be structured or used, based on the input requirement."
     )
-
 
 
 
@@ -35,10 +35,6 @@ class VOC(BaseModel):
 
 class ROC(BaseModel):
     
-    # Functional Design Section
-    project_name: str = Field(description="Extracted project name")
-    RICEF_id: str = Field(description="Generated or extracted RICEF ID")
-    client_name: str = Field(description="Extracted client name")
 
     alternatives_considered: str = Field(description="A listing of the various alternative approaches that were considered.")
     agreed_upon_approach: str = Field(description="Which alternative was selected?")

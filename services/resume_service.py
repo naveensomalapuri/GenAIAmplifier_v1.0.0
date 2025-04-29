@@ -5,6 +5,7 @@ import os
 import json
 import uuid
 
+# Define the directory where JSON files will be stored.
 # Define the directory where JSON files will be stored
 RESUME_DIR = 'resumes_data'
 
