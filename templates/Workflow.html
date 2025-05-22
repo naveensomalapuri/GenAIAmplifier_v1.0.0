@@ -6,27 +6,6 @@
   <title>Section 1: VOC</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom drag-and-drop box styling */
-    .drop-zone {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 2px dashed #d1d5db;
-      border-radius: 8px;
-      padding: 20px;
-      background-color: #f9fafb;
-      color: #6b7280;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .drop-zone:hover {
-      background-color: #f3f4f6;
-    }
-    .drop-zone.drag-over {
-      background-color: #e5e7eb;
-      border-color: #3b82f6;
-    }
-
     /* Sidebar styling */
     .tabs-container {
       padding: 16px;
@@ -34,34 +13,8 @@
       width: 200px;
       margin-right: 16px;
     }
-    .tabs-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .tab-item {
-      display: block;
-      text-decoration: none;
-      text-align: center;
-      padding: 8px 16px;
-      margin-bottom: 8px;
-      border-radius: 4px;
-      transition: background-color 0.2s ease, color 0.2s ease;
-    }
-    .tab-item:hover {
-      background-color: #334155;
-    }
-    .tab-item.active {
-      background-color: #3b82f6;
-      color: white;
-    }
-    .tab-item:not(.active) {
-      pointer-events: none;
-      color: #f3f4f6;
-      cursor: not-allowed;
-    }
 
-    /* Custom styling for Edit and Save buttons */
+    /* Custom styling for buttons */
     .edit-button, .save-button, .regenerate-button {
       padding: 8px 16px;
       border-radius: 4px;
@@ -97,12 +50,12 @@
       transform: scale(1.05);
     }
 
-    /* New CSS: Make all section headings bold */
+    /* Section headings styling */
     .section-header {
       font-weight: bold;
     }
 
-    /* New CSS: When a section container is in edit mode, show a single border */
+    /* When a section container is in edit mode, show a border */
     [data-section-name][contenteditable="true"] {
       border: 2px solid #4b5563;
       padding: 10px;
@@ -265,36 +218,132 @@
                 <p class="section-header text-blue-400">To be completed by the Functional Owner (Consultant)</p>
                 <hr class="border-t border-gray-600 my-4">
                 <div class="mt-6">
-                  {% if resume['generated_resume'][2]['Functional_Design_Process'] %}
-                    <p class="section-header text-blue-400">Process:</p>
-                    <p class="section-description text-blue-300" data-key="Functional_Design_Process">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_Process'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][2]['Functional_Design_Interface_Direction'] %}
-                    <p class="section-header mt-4 text-blue-400">Interface Direction:</p>
-                    <p class="section-description text-blue-300" data-key="Functional_Design_Interface_Direction">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_Interface_Direction'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][2]['Functional_Design_Error_Handling'] %}
-                    <p class="section-header mt-4 text-blue-400">Error Handling:</p>
-                    <p class="section-description text-blue-300" data-key="Functional_Design_Error_Handling">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_Error_Handling'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][2]['Functional_Design_Frequency'] %}
-                    <p class="section-header mt-4 text-blue-400">Frequency:</p>
-                    <p class="section-description text-blue-300" data-key="Functional_Design_Frequency">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_Frequency'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][2]['Functional_Design_Additional_Comments'] %}
-                    <p class="section-header mt-4 text-blue-400">Additional Comments:</p>
-                    <p class="section-description text-blue-300" data-key="Functional_Design_Additional_Comments">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_Additional_Comments'] }}
-                    </p>
-                  {% endif %}
+{% if resume['generated_resume'][2]['Functional_Design_functional_description'] %}
+<p class="section-header text-blue-400">Functional_Design_functional_description</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_functional_description">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_functional_description'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_business_benefits_need'] %}
+<p class="section-header text-blue-400">Functional_Design_business_benefits_need</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_business_benefits_need">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_business_benefits_need'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_process'] %}
+<p class="section-header text-blue-400">Functional_Design_process</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_process">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_process'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_assumptions'] %}
+<p class="section-header text-blue-400">Functional_Design_assumptions</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_assumptions">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_assumptions'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_start_conditions'] %}
+<p class="section-header text-blue-400">Functional_Design_start_conditions</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_start_conditions">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_start_conditions'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_process_flow'] %}
+<p class="section-header text-blue-400">Functional_Design_process_flow</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_process_flow">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_process_flow'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_organizational_structure'] %}
+<p class="section-header text-blue-400">Functional_Design_organizational_structure</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_organizational_structure">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_organizational_structure'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_applications_objects_transactions_affected'] %}
+<p class="section-header text-blue-400">Functional_Design_applications_objects_transactions_affected</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_applications_objects_transactions_affected">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_applications_objects_transactions_affected'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_new_tables_required_sap_tables_extended'] %}
+<p class="section-header text-blue-400">Functional_Design_new_tables_required_sap_tables_extended</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_new_tables_required_sap_tables_extended">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_new_tables_required_sap_tables_extended'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_input'] %}
+<p class="section-header text-blue-400">Functional_Design_input</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_input">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_input'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_input_fields'] %}
+<p class="section-header text-blue-400">Functional_Design_input_fields</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_input_fields">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_input_fields'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_output'] %}
+<p class="section-header text-blue-400">Functional_Design_output</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_output">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_output'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_security_requirements_no_specific_restrictions'] %}
+<p class="section-header text-blue-400">Functional_Design_security_requirements_no_specific_restrictions</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_security_requirements_no_specific_restrictions">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_security_requirements_no_specific_restrictions'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_security_requirements_restriction_based_on_certain_criteria'] %}
+<p class="section-header text-blue-400">Functional_Design_security_requirements_restriction_based_on_certain_criteria</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_security_requirements_restriction_based_on_certain_criteria">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_security_requirements_restriction_based_on_certain_criteria'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_security_requirements_other'] %}
+<p class="section-header text-blue-400">Functional_Design_security_requirements_other</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_security_requirements_other">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_security_requirements_other'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_unit_testing'] %}
+<p class="section-header text-blue-400">Functional_Design_unit_testing</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_unit_testing">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_unit_testing'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_additional_comments'] %}
+<p class="section-header text-blue-400">Functional_Design_additional_comments</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_additional_comments">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_additional_comments'] }}
+</p>
+{% endif %}
+
+{% if resume['generated_resume'][2]['Functional_Design_rework_log'] %}
+<p class="section-header text-blue-400">Functional_Design_rework_log</p>
+<p class="section-description text-blue-300" data-key="Functional_Design_rework_log">
+&nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][2]['Functional_Design_rework_log'] }}
+</p>
+{% endif %}
+
                 </div>
                 <!-- Edit, Save and Regenerate Buttons -->
                 <button class="edit-button mt-4" onclick="enableEditing('2')">Edit</button>
@@ -310,42 +359,153 @@
                 <p class="section-header text-orange-400">To be completed by the Technical Owner (Onsite Tech Lead)</p>
                 <hr class="border-t border-gray-600 my-4">
                 <div class="mt-6">
-                  {% if resume['generated_resume'][3]['Technical_Design_Design_Points'] %}
-                    <p class="section-header text-orange-400">Design Points:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Design_Points">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Design_Points'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][3]['Technical_Design_Special_Configuration_Settings'] %}
-                    <p class="section-header mt-4 text-orange-400">Special Configuration Settings:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Special_Configuration_Settings">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Special_Configuration_Settings'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][3]['Technical_Design_Target_Environment'] %}
-                    <p class="section-header mt-4 text-orange-400">Target Environment:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Target_Environment">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Target_Environment'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][3]['Technical_Design_Error_Handling'] %}
-                    <p class="section-header mt-4 text-orange-400">Error Handling:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Error_Handling">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Error_Handling'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][3]['Technical_Design_Additional_Process_Requirements'] %}
-                    <p class="section-header mt-4 text-orange-400">Additional Process Requirements:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Additional_Process_Requirements">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Additional_Process_Requirements'] }}
-                    </p>
-                  {% endif %}
-                  {% if resume['generated_resume'][3]['Technical_Design_Rework_Log'] %}
-                    <p class="section-header mt-4 text-orange-400">Rework Log:</p>
-                    <p class="section-description text-orange-300" data-key="Technical_Design_Rework_Log">
-                      &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_Rework_Log'] }}
-                    </p>
-                  {% endif %}
+{% if resume['generated_resume'][3]['Technical_Design_development_objectives_summary'] %}
+  <p class="section-header text-orange-400">development_objectives_summary:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_development_objectives_summary">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_development_objectives_summary'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_workflow_id'] %}
+  <p class="section-header text-orange-400">workflow_id:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_workflow_id">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_workflow_id'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_workflow_name'] %}
+  <p class="section-header text-orange-400">workflow_name:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_workflow_name">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_workflow_name'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_development_class_package'] %}
+  <p class="section-header text-orange-400">development_class_package:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_development_class_package">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_development_class_package'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_workflow_location'] %}
+  <p class="section-header text-orange-400">workflow_location:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_workflow_location">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_workflow_location'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_development_type'] %}
+  <p class="section-header text-orange-400">development_type:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_development_type">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_development_type'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_frequency'] %}
+  <p class="section-header text-orange-400">frequency:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_frequency">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_frequency'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_trigger'] %}
+  <p class="section-header text-orange-400">trigger:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_trigger">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_trigger'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_volume'] %}
+  <p class="section-header text-orange-400">volume:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_volume">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_volume'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_requirements_summary'] %}
+  <p class="section-header text-orange-400">requirements_summary:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_requirements_summary">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_requirements_summary'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_assumptions_dev_objectives'] %}
+  <p class="section-header text-orange-400">assumptions_dev_objectives:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_assumptions_dev_objectives">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_assumptions_dev_objectives'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_applications_objects_transactions_affected_dev_objectives'] %}
+  <p class="section-header text-orange-400">applications_objects_transactions_affected_dev_objectives:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_applications_objects_transactions_affected_dev_objectives">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_applications_objects_transactions_affected_dev_objectives'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_special_configuration_settings_assumptions_dev_objectives'] %}
+  <p class="section-header text-orange-400">special_configuration_settings_assumptions_dev_objectives:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_special_configuration_settings_assumptions_dev_objectives">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_special_configuration_settings_assumptions_dev_objectives'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_technical_flow_diagram'] %}
+  <p class="section-header text-orange-400">technical_flow_diagram:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_technical_flow_diagram">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_technical_flow_diagram'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_technical_flow_description'] %}
+  <p class="section-header text-orange-400">technical_flow_description:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_technical_flow_description">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_technical_flow_description'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_object_details'] %}
+  <p class="section-header text-orange-400">object_details:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_object_details">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_object_details'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_security_and_authorization'] %}
+  <p class="section-header text-orange-400">security_and_authorization:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_security_and_authorization">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_security_and_authorization'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_processing_and_operational_considerations'] %}
+  <p class="section-header text-orange-400">processing_and_operational_considerations:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_processing_and_operational_considerations">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_processing_and_operational_considerations'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_external_programs'] %}
+  <p class="section-header text-orange-400">external_programs:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_external_programs">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_external_programs'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_rework_log'] %}
+  <p class="section-header text-orange-400">rework_log:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_rework_log">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_rework_log'] }}
+  </p>
+{% endif %}
+
+{% if resume['generated_resume'][3]['Technical_Design_clean_core_implications'] %}
+  <p class="section-header text-orange-400">clean_core_implications:</p>
+  <p class="section-description text-orange-300" data-key="Technical_Design_clean_core_implications">
+    &nbsp;&nbsp;&nbsp;{{ resume['generated_resume'][3]['Technical_Design_clean_core_implications'] }}
+  </p>
+{% endif %}
+
                 </div>
                 <!-- Edit, Save and Regenerate Buttons -->
                 <button class="edit-button mt-4" onclick="enableEditing('3')">Edit</button>
@@ -403,68 +563,18 @@
     const customerName = params.get('name');
     const ricefwNumber = params.get('ricefwNumber');
 
-    // Original text
+    // Decode the meeting notes text
     const encodedText = params.get('meetingNotes');
-
-    // Decode the text
-    const decodedText = decodeURIComponent(encodedText);
+    const decodedText = encodedText ? decodeURIComponent(encodedText) : "";
 
     console.log(decodedText);
     console.log('Customer:', customerName);
 
-    const data = {
-      ricefw: params.get('ricefw'),
-      customer: params.get('customer'),
-      ricefw_number: params.get('ricefw_number'),
-      module: params.get('module'),
-      specification: params.get('specification'),
-      description: params.get('description'),
-      related_ricefw: params.get('related_ricefw'),
-      created_by: params.get('created_by'),
-      document_date: params.get('document_date'),
-      completion_date: params.get('completion_date'),
-      client_owner_name: params.get('client_owner_name'),
-      client_owner_company: params.get('client_owner_company'),
-      client_owner_email: params.get('client_owner_email'),
-      client_owner_phone: params.get('client_owner_phone'),
-      functional_owner_name: params.get('functional_owner_name'),
-      functional_owner_company: params.get('functional_owner_company'),
-      functional_owner_email: params.get('functional_owner_email'),
-      functional_owner_phone: params.get('functional_owner_phone'),
-      technical_owner_name: params.get('technical_owner_name'),
-      technical_owner_company: params.get('technical_owner_company'),
-      technical_owner_email: params.get('technical_owner_email'),
-      technical_owner_phone: params.get('technical_owner_phone'),
-      developer_name: params.get('developer_name'),
-      developer_company: params.get('developer_company'),
-      developer_email: params.get('developer_email'),
-      developer_phone: params.get('developer_phone'),
-      fileText: params.get('fileText'),
-    };
-
-    function goBack() {
-      window.location.href = 'app.html';
-    }
-
-    function navigateTo(page) {
-      window.location.href = page;
-    }
-
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const generateVocButton = document.getElementById('generate-voc');
-    const generateRocButton = document.getElementById('generate-roc');
-    const generateFdButton = document.getElementById('generate-fd');
-    const generateTdButton = document.getElementById('generate-td');
-    const downloadWordButton = document.getElementById('downloadword');
-    let fileContent = "";
-
-
-    generateVocButton.addEventListener('click', () => {
+    // Event listener for VOC generation
+    document.getElementById('generate-voc').addEventListener('click', () => {
       if (decodedText && customerName) {
         const prefix = "VOC";
         const updatedFileContent = `${prefix} ${decodedText}`;
-        console.log('updatedFileContent:', updatedFileContent);
         const formData = new URLSearchParams();
         formData.append('client_problem', updatedFileContent);
         formData.append('client_name', customerName);
@@ -495,11 +605,11 @@
       }
     });
 
-    generateRocButton.addEventListener('click', () => {
+    // Event listener for ROC generation
+    document.getElementById('generate-roc').addEventListener('click', () => {
       if (decodedText && customerName) {
         const prefix = "ROC";
         const updatedFileContent = `${prefix} ${decodedText}`;
-        console.log('updatedFileContent:', updatedFileContent);
         const formData = new URLSearchParams();
         formData.append('client_problem', updatedFileContent);
         formData.append('client_name', customerName);
@@ -530,11 +640,11 @@
       }
     });
 
-    generateFdButton.addEventListener('click', () => {
+    // Event listener for FD generation
+    document.getElementById('generate-fd').addEventListener('click', () => {
       if (decodedText && customerName) {
         const prefix = "FD";
         const updatedFileContent = `${prefix} ${decodedText}`;
-        console.log('updatedFileContent:', updatedFileContent);
         const formData = new URLSearchParams();
         formData.append('client_problem', updatedFileContent);
         formData.append('client_name', customerName);
@@ -565,11 +675,11 @@
       }
     });
 
-    generateTdButton.addEventListener('click', () => {
+    // Event listener for TD generation
+    document.getElementById('generate-td').addEventListener('click', () => {
       if (decodedText && customerName) {
         const prefix = "TD";
         const updatedFileContent = `${prefix} ${decodedText}`;
-        console.log('updatedFileContent:', updatedFileContent);
         const formData = new URLSearchParams();
         formData.append('client_problem', updatedFileContent);
         formData.append('client_name', customerName);
@@ -600,13 +710,10 @@
       }
     });
 
-    // Function to trigger the download
+    // Function to download the resume
     async function downloadResume() {
-      const params = new URLSearchParams(window.location.search);
-      // const customerName = params.get('name');
-      const ricefwNumber = params.get('ricefwNumber');
       if (!ricefwNumber) {
-        showNotification("Customer name is missing from the URL parameters.", "error");
+        showNotification("RICEFW number is missing from the URL parameters.", "error");
         return;
       }
       try {
@@ -631,7 +738,7 @@
 
     document.getElementById('download-resume-btn').addEventListener('click', downloadResume);
 
-    // Updated enableEditing: make the entire section editable
+    // Function to enable section editing
     function enableEditing(sectionName) {
       var section = document.querySelector(`[data-section-name="${sectionName}"]`);
       if (section) {
@@ -646,12 +753,10 @@
       }
     }
 
-    // Updated saveChanges: remove contenteditable from the entire section
+    // Function to save edited section changes
     function saveChanges(sectionName) {
-      const params = new URLSearchParams(window.location.search);
-      const customerName = params.get('name');
       if (!customerName) {
-        console.error('Customer name not found in URL parameters.');
+        showNotification('Customer name not found in URL parameters.', "error");
         return;
       }
       var section = document.querySelector(`[data-section-name="${sectionName}"]`);
@@ -664,7 +769,7 @@
             updatedData[key] = el.innerText;
           }
         });
-        console.log(updatedData);
+        
         fetch(`/update_customer_data?customerName=${encodeURIComponent(customerName)}`, {
           method: 'POST',
           headers: {
@@ -681,51 +786,50 @@
             });
             section.querySelector('.edit-button').style.display = 'inline';
             section.querySelector('.save-button').style.display = 'none';
+            showNotification('Changes saved successfully!', "success");
           } else {
-            console.error('Save failed:', result.error);
+            showNotification('Save failed: ' + result.error, "error");
           }
         })
         .catch(error => {
           console.error('Error:', error);
+          showNotification('An error occurred while saving changes.', "error");
         });
       } else {
-        console.error(`Section with data-section-name="${sectionName}" not found.`);
+        showNotification(`Section with data-section-name="${sectionName}" not found.`, "error");
       }
     }
 
-// New regeneration functionality:
-// When the regeneration button is clicked, this function is triggered.
-// It sends the customer name, meetingNotes (decodedText), section index (data-section-name),
-// and ricefwNumber to the FastAPI regeneration route.
-function regenerateSection(sectionName) {
-  if (decodedText && customerName && ricefwNumber) {
-    const formData = new URLSearchParams();
-    formData.append('client_name', customerName);
-    formData.append('meetingNotes', decodedText);
-    formData.append('section_index', sectionName);
-    formData.append('ricefwNumber', ricefwNumber);
+    // Function to regenerate a section
+    function regenerateSection(sectionName) {
+      if (decodedText && customerName && ricefwNumber) {
+        const formData = new URLSearchParams();
+        formData.append('client_name', customerName);
+        formData.append('meetingNotes', decodedText);
+        formData.append('section_index', sectionName);
+        formData.append('ricefwNumber', ricefwNumber);
 
-    fetch('/regeneration', { 
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    })
-    .then(response => {
-      if (response.ok) {
-        showNotification('Section ' + sectionName + ' regenerated successfully!', 'success');
-      } else {
-        showNotification('Failed to regenerate section ' + sectionName, 'error');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Regeneration Response:', data);
-      // Auto reset the page once the section is regenerated successfully.
-      window.location.reload();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      showNotification('An error occurred while regenerating section ' + sectionName, 'error');
+        fetch('/regeneration', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
+        })
+        .then(response => {
+          if (response.ok) {
+            showNotification('Section ' + sectionName + ' regenerated successfully!', 'success');
+          } else {
+            showNotification('Failed to regenerate section ' + sectionName, 'error');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Regeneration Response:', data);
+          // Auto reset the page once the section is regenerated successfully.
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification('An error occurred while regenerating section ' + sectionName, 'error');
     });
   } else {
     showNotification("Missing parameters for regeneration.", "error");

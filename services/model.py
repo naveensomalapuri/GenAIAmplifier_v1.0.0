@@ -1,114 +1,95 @@
 import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
+from langchain_openai import AzureChatOpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
-from services.jsondatastructure import VOC, FD, TD, ROC
-
-
-
-
-
-# -*- coding: utf-8 -*-
-"""
-Gen AI Amplifier Structured Output
-===================================
-This script demonstrates the use of the Tavily Search tool along with LangGraph,
-Langsmith, and LangChain integrations to create a conversational agent with
-structured output for functional design requirements.
-
-API keys are loaded from a .env file. If the keys are not found, the user
-will be prompted for the missing keys.
-
-Original Notebook:
-    https://colab.research.google.com/drive/1r2y-uIRG4VK0SZpE-196LwODAtJxvk3w
-"""
-
-# ------------------------------------------------------------------------------
-# 1. Install Dependencies (if not already installed)
-# ------------------------------------------------------------------------------
-# !pip install langgraph langsmith langchain langchain_groq langchain_community python-dotenv
-
-# ------------------------------------------------------------------------------
-# 2. Import Statements
-# ------------------------------------------------------------------------------
-# Standard Library imports
-import os
-import getpass
-
-# Third-Party Imports
-from dotenv import load_dotenv
+from langchain_core.messages import HumanMessage
 from typing import Annotated
 from typing_extensions import TypedDict
 from pydantic import BaseModel, Field
-# from IPython.display import Image, display
-
-# LangChain, LangGraph, and related Imports
-from langchain_tavily import TavilySearch
 from langgraph.graph import MessagesState, StateGraph, END
 from langgraph.prebuilt import ToolNode
-from langchain_groq import ChatGroq
-from langchain_core.messages import HumanMessage
+from langchain_tavily import TavilySearch
+import importlib
 
 
-def openmodel(client_business_requirement, client_name):
-    # Google Colab specific import for handling user data storage (if needed)
-    # In this updated version, we use the .env file for keys.
-    # from google.colab import userdata
-
+def openmodel(client_business_requirement, wricefType):
+    """
+    Process business requirements using LLM and structured output
+    
+    Args:
+        client_business_requirement (str): The business requirement text
+        client_name (str): The name of the client
+        
+    Returns:
+        dict: Structured response as a dictionary
+    """
     # ------------------------------------------------------------------------------
-    # 3. Load Environment Variables from .env File
+    # Load Environment Variables
     # ------------------------------------------------------------------------------
-    # Load variables from a .env file located in the same directory.
     load_dotenv()
 
-    # Retrieve the Tavily API key from the environment variables
+    # Retrieve and validate the Tavily API key
     tavily_api_key = os.getenv("TAVILY_API_KEY")
     if tavily_api_key is None:
         raise ValueError("TAVILY_API_KEY not found in the environment. Please add it to your .env file.")
-
-    # Now you can use tavily_api_key as needed, for example:
+    
     os.environ["TAVILY_API_KEY"] = tavily_api_key
 
+    # Retrieve Azure OpenAI credentials
+    api_key = os.getenv("AZURE_OPENAI_API_KEY")
+    api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
+    api_version = os.getenv("OPENAI_API_VERSION")
+    deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+    
+    # Validate all required environment variables are present
+    if not api_key or not api_base or not api_version or not deployment:
+        missing_vars = []
+        if not api_key: missing_vars.append("AZURE_OPENAI_API_KEY")
+        if not api_base: missing_vars.append("AZURE_OPENAI_ENDPOINT") 
+        if not api_version: missing_vars.append("OPENAI_API_VERSION")
+        if not deployment: missing_vars.append("AZURE_OPENAI_DEPLOYMENT")
+        
+        raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
     # ------------------------------------------------------------------------------
-    # 4. Initialize the Tavily Search Tool
+    # Initialize the Tavily Search Tool
     # ------------------------------------------------------------------------------
-    # Create an instance of the TavilySearch tool with the desired parameters.
     tool = TavilySearch(
         max_results=5,
         topic="general",
         search_depth="advanced",
-        # Optional parameters (uncomment if necessary):
-        # include_answer=False,
-        # include_raw_content=False,
-        # include_images=False,
-        # include_image_descriptions=False,
-        # time_range="day",
-        # include_domains=None,
-        # exclude_domains=None
     )
-    # The tool can be invoked as needed (e.g., tool.invoke({"query": "your query"})).
 
     # ------------------------------------------------------------------------------
-    # 5. Define the Structured Model for Functional Design Requirements
+    # Dynamically Import Pydantic Classes Based on wricefType
     # ------------------------------------------------------------------------------
+    try:
+        # Use wricefType as-is (case-sensitive)
+        module_path = f"services.{wricefType}"
+        module = importlib.import_module(module_path)
 
-    
-    if "VOC" in client_business_requirement:
-        Pydantic_Object = VOC
-    elif "ROC" in client_business_requirement:
-        Pydantic_Object = ROC
-    elif "FD" in client_business_requirement:
-        Pydantic_Object = FD
-    elif "TD" in client_business_requirement:
-        Pydantic_Object = TD
-    else:
-        # If none of the expected keywords are found, raise an error.
-        raise ValueError("Invalid business requirement query. Must contain 'VOC', 'ROC', 'FD', or 'TD'.")
+        # Choose the class based on the business requirement
+        if "VOC" in client_business_requirement:
+            Pydantic_Object = getattr(module, "VOC")
+        elif "ROC" in client_business_requirement:
+            Pydantic_Object = getattr(module, "ROC")
+        elif "FD" in client_business_requirement:
+            Pydantic_Object = getattr(module, "FD")
+        elif "TD" in client_business_requirement:
+            Pydantic_Object = getattr(module, "TD")
+        else:
+            raise ValueError("Business requirement must contain one of: VOC, ROC, FD, TD.")
+
+    except ModuleNotFoundError:
+        raise ImportError(f"Module 'services.{wricefType}' not found.")
+    except AttributeError as e:
+        raise ImportError(f"Expected class not found in module 'services.{wricefType}': {e}")
+
 
     # ------------------------------------------------------------------------------
-    # 6. Define the Agent State for the Conversational Workflow
+    # Define the Agent State for the Conversational Workflow
     # ------------------------------------------------------------------------------
     class AgentState(MessagesState):
         """
@@ -118,79 +99,76 @@ def openmodel(client_business_requirement, client_name):
         final_response: Pydantic_Object
 
     # ------------------------------------------------------------------------------
-    # 7. Initialize the Chat Model and Bind Tools
+    # Initialize the Azure OpenAI Chat Model with proper parameters
     # ------------------------------------------------------------------------------
-    # Retrieve the GROQ API key from environment variables.
-    groq_api_key = os.environ.get("GROQ_API_KEY")
-    # Initialize the ChatGroq model with the provided API key and specific model name.
-    model = ChatGroq(groq_api_key=groq_api_key, model_name="llama-3.3-70b-versatile")
+    try:
+        model = AzureChatOpenAI(
+            api_key=api_key,                  
+            azure_endpoint=api_base,          
+            api_version=api_version,        
+            azure_deployment=deployment,
+            model_name=deployment,  # Explicitly set model name to be the same as deployment
+            temperature=0,
+            # Use model_kwargs instead of extra_headers
+            model_kwargs={"extra_headers": {"x-ms-model-mesh-model-name": deployment}},
+        )
+    except Exception as e:
+        # Provide a more helpful error message
+        raise ValueError(f"Failed to initialize Azure OpenAI model: {str(e)}. Verify your Azure OpenAI credentials and deployment.")
 
-    # Bind the TavilySearch tool to the chat model.
+    # Bind the TavilySearch tool to the chat model
     model_with_tools = model.bind_tools([tool])
-    # Configure the model to return structured output following the Pydantic_Object model.
+    
+    # Configure the model to return structured output
     model_with_structured_output = model.with_structured_output(Pydantic_Object)
 
     # ------------------------------------------------------------------------------
-    # 8. Define Functions for the Conversational Workflow
+    # Define Functions for the Conversational Workflow
     # ------------------------------------------------------------------------------
     def call_model(state: AgentState):
         """
         Invokes the chat model using the current list of messages in the conversation state.
-        
-        Args:
-            state (AgentState): The current conversation state.
-            
-        Returns:
-            dict: A dictionary containing a new list of messages from the model.
         """
-        response = model_with_tools.invoke(state["messages"])
-        return {"messages": [response]}
+        try:
+            response = model_with_tools.invoke(state["messages"])
+            return {"messages": [response]}
+        except Exception as e:
+            raise RuntimeError(f"Error calling the model: {str(e)}")
 
     def respond(state: AgentState):
         """
         Generates the final structured response.
-        
-        Converts a previous tool response into a HumanMessage and invokes the model to produce the final output.
-        
-        Args:
-            state (AgentState): The current conversation state.
-            
-        Returns:
-            dict: A dictionary containing the final structured response.
         """
-        response = model_with_structured_output.invoke(
-            [HumanMessage(content=state["messages"][-2].content)]
-        )
-        return {"final_response": response}
+        try:
+            response = model_with_structured_output.invoke(
+                [HumanMessage(content=state["messages"][-2].content)]
+            )
+            return {"final_response": response}
+        except Exception as e:
+            raise RuntimeError(f"Error generating structured response: {str(e)}")
 
     def should_continue(state: AgentState):
         """
         Determines if the workflow should continue tool invocation or generate the final response.
-        
-        Args:
-            state (AgentState): The conversation state.
-        
-        Returns:
-            str: "continue" if tool calls exist; otherwise "respond".
         """
         messages = state["messages"]
         last_message = messages[-1]
         return "respond" if not last_message.tool_calls else "continue"
 
     # ------------------------------------------------------------------------------
-    # 9. Build the StateGraph Workflow
+    # Build the StateGraph Workflow
     # ------------------------------------------------------------------------------
     workflow = StateGraph(AgentState)
 
-    # Define nodes representing stages of the workflow.
+    # Define nodes representing stages of the workflow
     workflow.add_node("agent", call_model)
     workflow.add_node("respond", respond)
     workflow.add_node("tools", ToolNode([tool]))
 
-    # Set the entry point to the workflow.
+    # Set the entry point to the workflow
     workflow.set_entry_point("agent")
 
-    # Conditional edge based on whether to invoke a tool or to generate a final response.
+    # Conditional edge based on whether to invoke a tool or to generate a final response
     workflow.add_conditional_edges(
         "agent",
         should_continue,
@@ -200,201 +178,29 @@ def openmodel(client_business_requirement, client_name):
         },
     )
 
-    # Loop back to the agent node after using a tool.
+    # Loop back to the agent node after using a tool
     workflow.add_edge("tools", "agent")
-    # Final node connecting to the end of the workflow.
+    # Final node connecting to the end of the workflow
     workflow.add_edge("respond", END)
     graph = workflow.compile()
 
     # ------------------------------------------------------------------------------
-    # 10. (Optional) Display the Workflow Graph
+    # Invoke the Workflow with User Input
     # ------------------------------------------------------------------------------
-    # try:
-    #     display(Image(graph.get_graph().draw_mermaid_png()))
-    # except Exception:
-    #     pass
-
-    # ------------------------------------------------------------------------------
-    # 11. Invoke the Workflow with User Input
-    # ------------------------------------------------------------------------------
-    # Prompt for user input (query or voice of the customer).
-    Human_Input = client_business_requirement
-    answer = graph.invoke(input={"messages": [("human", Human_Input)]})["final_response"]
-
-    # Print the final structured response.
-    print("\nStructured Final Response:")
-    print(answer)
-
-    # Optionally, convert the structured response to a dictionary.
-    answer_dict = answer.dict()
-    print("\nResponse as a Dictionary:")
-    print(answer_dict)
-    return answer_dict
-
-
-
-# def openmodel(client_business_requirement, client_name):
-#     """
-#     Generates a RICEF form based on the provided client business requirement and client name.
-    
-#     This function examines the 'client_business_requirement' to determine which data structure 
-#     (VOC, ROC, FD, or TD) to use. It then constructs a prompt template and invokes a chain of 
-#     operations that include the chat model and an output parser to generate the final response.
-    
-#     Parameters:
-#         client_business_requirement (str): The detailed business requirement provided by the client.
-#         client_name (str): The name of the client.
-    
-#     Returns:
-#         response: The processed output from the chain after invoking the model and parser.
-#     """
-#     # Load environment variables from the .env file to access sensitive data like API keys.
-#     load_dotenv()
-
-#     # Retrieve the GROQ API key from the environment variables.
-#     groq_api_key = os.getenv("GROQ_API_KEY")
-#     if not groq_api_key:
-#         raise ValueError("GROQ_API_KEY is not set in the environment.")
-
-#     # Initialize the ChatGroq model with a specific model name and the retrieved API key.
-#     model = ChatGroq(model_name="llama-3.3-70b-versatile", groq_api_key=groq_api_key)
-
-#     # Determine the pydantic object, section title, and fields based on keywords found in the business requirement.
-#     if "VOC" in client_business_requirement:
-#         # VOC (Voice of Customer) section details.
-#         pydantic_object = VOC
-#         section_title = "**Voice of Customer Section**"
-#         fields = [
-#             "WHAT (Functional Description)",
-#             "WHY (Business Benefit/Need)",
-#             "WHO/WHERE",
-#             "WHEN",
-#             "HOW - Input",
-#             "HOW - Process",
-#             "HOW - Output",
-#             "Additional Comments",
-#         ]
-#     elif "ROC" in client_business_requirement:
-#         # ROC (Interface Decision) section details.
-#         pydantic_object = ROC
-#         section_title = "**Interface Decision Section**"
-#         fields = [
-#             "Alternatives Considered",
-#             "Agreed Upon Approach",
-#             "Functional Description",
-#             "Business Benefit/Need",
-#             "Important Assumptions",
-#             "Additional Comments",
-#         ]
-#     elif "FD" in client_business_requirement:
-#         # FD (Functional Design) section details.
-#         pydantic_object = FD
-#         section_title = "**Functional Design Section**"
-#         # fields = [
-#         #     "Process",
-#         #     "Interface Direction",
-#         #     "Error Handling",
-#         #     "Frequency",
-#         #     "Data Volume",
-#         #     "Security Requirements",
-#         #     "Data Sensitivity",
-#         #     "Unit Testing",
-#         #     "Additional Comments",
-#         #     "Rework Log",
-#         # ]
-#         fields = [
-#             "Process",
-#             "Interface Direction",
-#             "Error Handling",
-#             "Frequency",
-#             "Data Volume",
-#             "Security Requirements",
-#             "Data Sensitivity",
-#             "Unit Testing",
-#             "Additional Comments",
-#             "Rework Log",
-#             # New fields added from:
-#             # "Functional_Design_reference_transactions_tables_programs"
-#             # "Functional_Design_input_selection_criteria"
-#             # "Functional_Design_solution_format"
-#             # "Functional_Design_output_format_details"
-#             # "Functional_Design_barcode_requirements"
-#             # "Functional_Design_paper_requirements"
-#             # "Functional_Design_logo_requirements"
-#             # "Functional_Design_software_requirements"
-#             # "Functional_Design_printer_requirements"
-#             # "Functional_Design_output_type_application"
-#             "Reference transactions tables programs",
-#             "Input selection criteria",
-#             "Solution format",
-#             "Output format details",
-#             "Barcode requirements",
-#             "Paper requirements",
-#             "Logo requirements",
-#             "Software requirements",
-#             "Printer requirements",
-#             "Output type application",
-#         ]
-
-#     elif "TD" in client_business_requirement:
-#         # TD (Technical Design) section details.
-#         pydantic_object = TD
-#         section_title = "**Technical Design Section**"
-#         fields = [
-#             "Design Points",
-#             "Special Configuration Settings",
-#             "Outbound Definition",
-#             "Target Environment",
-#             "Starting Transaction/Application",
-#             "Triggering Events",
-#             "Data Transformation Process",
-#             "Data Transfer Process",
-#             "Data Format",
-#             "Error Handling",
-#             "Additional Process Requirements",
-#             "Inbound Definition",
-#             "Source Environment",
-#             "Receiving Transaction/Application",
-#             "Rework Log",
-#         ]
-#     else:
-#         # If none of the expected keywords are found, raise an error.
-#         raise ValueError("Invalid business requirement query. Must contain 'VOC', 'ROC', 'FD', or 'TD'.")
-
-#     # Initialize the output parser with the chosen pydantic data structure.
-#     parser = JsonOutputParser(pydantic_object=pydantic_object)
-
-#     # Create a prompt template that includes format instructions and a list of required fields.
-#     # Notice the use of doubled curly braces to leave placeholders intact for the PromptTemplate.
-#     template = (
-#         "Using the provided client business requirement, generate a complete RICEF form with detailed responses for the following fields. "
-#         "All fields must be filled; no field should be left blank or marked as 'to be determined'. Additionally, "
-#         "the client's name must be explicitly taken from the provided input prompt.\n\n"
-#         "{format_instructions}\n\n"
-#         f"- {section_title}:\n" +
-#         "\n".join([f"   - {field}" for field in fields]) +
-#         "\n\nClient Name: {{client_name}}\n\nClient Business Requirement:\n{{client_business_requirement}}"
-#     )
-
-#     # Create the PromptTemplate instance using the defined template and expected input variables.
-#     prompt_template = PromptTemplate(
-#         template=template,
-#         input_variables=["client_business_requirement", "client_name"],
-#         partial_variables={"format_instructions": parser.get_format_instructions()},
-#     )
-
-#     # Compose the chain with the prompt template, the model, and the parser.
-#     # The '|' operator is used to link these components.
-#     chain = prompt_template | model | parser
-
-#     # Invoke the chain with the provided parameters to generate a response.
-#     response = chain.invoke({
-#         "client_business_requirement": client_business_requirement,
-#         "client_name": client_name
-#     })
-    
-#     # Return the final generated response.
-#     return response
+    try:
+        # Process the user's input and get structured response
+        Human_Input = client_business_requirement
+        result = graph.invoke(input={"messages": [("human", Human_Input)]})
+        answer = result["final_response"]
+        
+        # Convert the structured response to a dictionary
+        answer_dict = answer.dict()
+        return answer_dict
+    except Exception as e:
+        # Provide a helpful error message
+        error_msg = f"Error processing business requirement: {str(e)}"
+        print(error_msg)
+        raise RuntimeError(error_msg)
 
 
 
@@ -402,7 +208,7 @@ def openmodel(client_business_requirement, client_name):
 
 
 
-def openmodel_regeneration(client_business_requirement, client_name, previous_response, current_response, index_value):
+def openmodel_regeneration(client_business_requirement, wricefType, previous_response, current_response, index_value):
     # Google Colab specific import for handling user data storage (if needed)
     # In this updated version, we use the .env file for keys.
     # from google.colab import userdata
@@ -445,18 +251,38 @@ def openmodel_regeneration(client_business_requirement, client_name, previous_re
     # 5. Define the Structured Model for Functional Design Requirements
     # ------------------------------------------------------------------------------
 
-    
-    if index_value == 0:
-        Pydantic_Object = VOC
-    elif index_value == 1:
-        Pydantic_Object = ROC
-    elif index_value == 2:
-        Pydantic_Object = FD
-    elif index_value == 3:
-        Pydantic_Object = TD
-    else:
-        # If none of the expected keywords are found, raise an error.
-        raise ValueError("Invalid business requirement query. Must contain 'VOC', 'ROC', 'FD', or 'TD'.")
+
+
+    # ------------------------------------------------------------------------------
+    # Dynamically Import Pydantic Class Based on index_value
+    # ------------------------------------------------------------------------------
+
+    # Map of index values to class names
+    index_to_class_name = {
+        0: "VOC",
+        1: "ROC",
+        2: "FD",
+        3: "TD"
+    }
+
+    try:
+        # Get the class name from index
+        class_name = index_to_class_name.get(index_value)
+        if class_name is None:
+            raise ValueError("Invalid index value. Must be 0 (VOC), 1 (ROC), 2 (FD), or 3 (TD).")
+
+        # Dynamically import the module using wricefType
+        module_path = f"services.{wricefType}"
+        module = importlib.import_module(module_path)
+
+        # Dynamically get the Pydantic class from the module
+        Pydantic_Object = getattr(module, class_name)
+
+    except ModuleNotFoundError:
+        raise ImportError(f"Module 'services.{wricefType}' not found.")
+    except AttributeError as e:
+        raise ImportError(f"Expected class '{class_name}' not found in module 'services.{wricefType}': {e}")
+
 
     # ------------------------------------------------------------------------------
     # 6. Define the Agent State for the Conversational Workflow
@@ -585,176 +411,3 @@ def openmodel_regeneration(client_business_requirement, client_name, previous_re
 
 
 
-
-# def openmodel_regeneration(client_business_requirement, client_name, previous_response, current_response, index_value):
-#     """
-#     Regenerates an enhanced RICEF form response by considering previous and current responses.
-    
-#     This overloaded function uses an 'index_value' to determine which data structure to use:
-#       - 0: VOC
-#       - 1: ROC
-#       - 2: FD
-#       - 3: TD
-#     The function builds a detailed prompt that incorporates the original business requirement, 
-#     the previous response, and the current response, and then invokes the model to generate an enhanced output.
-    
-#     Parameters:
-#         client_business_requirement (str): The original business requirement provided by the client.
-#         client_name (str): The client's name.
-#         previous_response (str): The response generated in a previous run.
-#         current_response (str): The most recent response prior to regeneration.
-#         index_value (int): A value from 0 to 3 that selects the appropriate data structure (VOC, ROC, FD, TD).
-    
-#     Returns:
-#         response: The enhanced output from the chain after model and parser invocation.
-#     """
-#     # Load environment variables to access the GROQ API key.
-#     load_dotenv()
-
-#     # Retrieve the GROQ API key from environment variables.
-#     groq_api_key = os.getenv("GROQ_API_KEY")
-#     if not groq_api_key:
-#         raise ValueError("GROQ_API_KEY is not set in the environment.")
-
-#     # Initialize the ChatGroq model with the specific model name and API key.
-#     model = ChatGroq(model_name="llama-3.3-70b-versatile", groq_api_key=groq_api_key)
-
-#     # Select the appropriate pydantic object, section title, and fields based on the provided index_value.
-#     if index_value == 0:
-#         pydantic_object = VOC
-#         section_title = "**Voice of Customer Section**"
-#         fields = [
-#             "WHAT (Functional Description)",
-#             "WHY (Business Benefit/Need)",
-#             "WHO/WHERE",
-#             "WHEN",
-#             "HOW - Input",
-#             "HOW - Process",
-#             "HOW - Output",
-#             "Additional Comments",
-#         ]
-#     elif index_value == 1:
-#         pydantic_object = ROC
-#         section_title = "**Interface Decision Section**"
-#         fields = [
-#             "Alternatives Considered",
-#             "Agreed Upon Approach",
-#             "Functional Description",
-#             "Business Benefit/Need",
-#             "Important Assumptions",
-#             "Additional Comments",
-#         ]
-#     elif index_value == 2:
-#         pydantic_object = FD
-#         section_title = "**Functional Design Section**"
-#         # fields = [
-#         #     "Process",
-#         #     "Interface Direction",
-#         #     "Error Handling",
-#         #     "Frequency",
-#         #     "Data Volume",
-#         #     "Security Requirements",
-#         #     "Data Sensitivity",
-#         #     "Unit Testing",
-#         #     "Additional Comments",
-#         #     "Rework Log",
-#         # ]
-#         fields = [
-#             "Process",
-#             "Interface Direction",
-#             "Error Handling",
-#             "Frequency",
-#             "Data Volume",
-#             "Security Requirements",
-#             "Data Sensitivity",
-#             "Unit Testing",
-#             "Additional Comments",
-#             "Rework Log",
-#             # New fields added from:
-#             # "Functional_Design_reference_transactions_tables_programs"
-#             # "Functional_Design_input_selection_criteria"
-#             # "Functional_Design_solution_format"
-#             # "Functional_Design_output_format_details"
-#             # "Functional_Design_barcode_requirements"
-#             # "Functional_Design_paper_requirements"
-#             # "Functional_Design_logo_requirements"
-#             # "Functional_Design_software_requirements"
-#             # "Functional_Design_printer_requirements"
-#             # "Functional_Design_output_type_application"
-#             "Reference transactions tables programs",
-#             "Input selection criteria",
-#             "Solution format",
-#             "Output format details",
-#             "Barcode requirements",
-#             "Paper requirements",
-#             "Logo requirements",
-#             "Software requirements",
-#             "Printer requirements",
-#             "Output type application",
-#         ]
-
-#     elif index_value == 3:
-#         pydantic_object = TD
-#         section_title = "**Technical Design Section**"
-#         fields = [
-#             "Design Points",
-#             "Special Configuration Settings",
-#             "Outbound Definition",
-#             "Target Environment",
-#             "Starting Transaction/Application",
-#             "Triggering Events",
-#             "Data Transformation Process",
-#             "Data Transfer Process",
-#             "Data Format",
-#             "Error Handling",
-#             "Additional Process Requirements",
-#             "Inbound Definition",
-#             "Source Environment",
-#             "Receiving Transaction/Application",
-#             "Rework Log",
-#         ]
-#     else:
-#         # If index_value is not in the expected range, raise an error.
-#         raise ValueError("Invalid index_value. Must be 0 for VOC, 1 for ROC, 2 for FD, or 3 for TD.")
-
-#     # Set up the output parser with the selected pydantic object.
-#     parser = JsonOutputParser(pydantic_object=pydantic_object)
-
-#     # Construct an enhanced prompt template that includes the original business requirement, previous response,
-#     # and current response. The template instructs the model to generate an enhanced response.
-#     template = (
-#         "Using the provided client business requirement, generate a complete RICEF form with detailed responses for the following fields. "
-#         "All fields must be filled; no field should be left blank or marked as 'to be determined'. Additionally, "
-#         "the client's name must be explicitly taken from the provided input prompt.\n\n"
-#         "Previous Response is generated by the client problem. Now, the Current Response is generated based on the Previous Response, "
-#         "but now, understanding the Current Response clearly, provide an enhanced new response based on the client problem, Previous Response, "
-#         "and Current Response.\n\n"
-#         "{format_instructions}\n\n"
-#         f"- {section_title}:\n" +
-#         "\n".join([f"   - {field}" for field in fields]) +
-#         "\n\nClient Name: {{client_name}}\n\n"
-#         "Client Business Requirement:\n{{client_business_requirement}}\n\n"
-#         "Previous Response:\n{{previous_response}}\n\n"
-#         "Current Response:\n{{current_response}}\n\n"
-#     )
-
-#     # Create a PromptTemplate instance with all required variables.
-#     prompt_template = PromptTemplate(
-#         template=template,
-#         input_variables=["client_business_requirement", "client_name", "previous_response", "current_response"],
-#         partial_variables={"format_instructions": parser.get_format_instructions()},
-#     )
-
-#     # Compose the chain that links the prompt template, the model, and the output parser.
-#     chain = prompt_template | model | parser
-
-#     # Invoke the chain with the provided parameters to generate the enhanced response.
-#     response = chain.invoke({
-#         "client_business_requirement": client_business_requirement,
-#         "client_name": client_name,
-#         "previous_response": previous_response,
-#         "current_response": current_response
-#     })
-    
-#     # Return the final enhanced response.
-#     return response

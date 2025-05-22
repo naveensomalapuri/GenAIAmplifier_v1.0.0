@@ -294,18 +294,18 @@ async def add_item(form_data: Formdata):
 
 
 @router.get("/success")
-async def success_page(request: Request, name: str, meetingNotes: str, ricefwNumber: str):
+async def success_page(request: Request, name: str, meetingNotes: str, ricefwNumber: str, wricef_type: str):
     resume = collection.find_one({"ricefw_number":ricefwNumber})
 
-    return templates.TemplateResponse("section1.html", {"request": request, "name": name, "meetingNotes": meetingNotes, "ricefwNumber": ricefwNumber, "resume":resume})
+    return templates.TemplateResponse(f"{wricef_type}.html", {"request": request, "name": name, "meetingNotes": meetingNotes, "ricefwNumber": ricefwNumber, "resume":resume})
 
 
 
 @router.get("/view/{ricefw_number}", response_class=HTMLResponse)
 async def view_item(request: Request, ricefw_number: str, name: str, meetingNotes: str):
     resume = collection.find_one({"ricefw_number": ricefw_number})
-
-    return templates.TemplateResponse("section1.html", {
+    wricefType = resume["ricefw"]
+    return templates.TemplateResponse(f"{wricefType}.html", {
         "request": request,
         "name": name,
         "meetingNotes": meetingNotes,
@@ -321,8 +321,13 @@ async def create_resume(client_problem: str = Form(...), client_name: str = Form
     print(f"Received client_name: {client_name}")
     print(f"Received ricefwNumber: {ricefwNumber}")
 
+    resume = collection.find_one({"ricefw_number": ricefwNumber})
+    wricefType = resume["ricefw"]
+
+    print(f"Received wricefType: {wricefType}")
+
     # Generate the resume
-    generated_resume = generate_resume(client_problem, client_name)
+    generated_resume = generate_resume(client_problem, wricefType)
     print(f"Generated resume: {generated_resume}")
 
     # New dictionary to be added
@@ -690,10 +695,16 @@ async def regeneration(
     # Retrieve the previous response from the previous section (if available).
     previous_response = generated_resume[index_value - 1].get("response", "") if index_value > 0 else ""
 
+
+    resume = collection.find_one({"ricefw_number": ricefwNumber})
+    wricefType = resume["ricefw"]
+
+    print(f"Received wricefType: {wricefType}")
+
     # Generate the new enhanced response.
     new_enhanced_response = openmodel_regeneration(
         client_business_requirement=meetingNotes,
-        client_name=client_name,
+        wricefType=wricefType,
         previous_response=previous_response,
         current_response=current_response,
         index_value=index_value
